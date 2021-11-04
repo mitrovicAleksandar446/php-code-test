@@ -8,20 +8,14 @@ use Tymeshift\PhpTest\Domains\Schedule\ScheduleRepository;
 use Tymeshift\PhpTest\Domains\Schedule\ScheduleFactory;
 use Tymeshift\PhpTest\Domains\Schedule\ScheduleStorage;
 use Tymeshift\PhpTest\Exceptions\StorageDataMissingException;
+use UnitTester;
 
 class ScheduleCest
 {
+    private ?MockInterface $scheduleStorageMock;
 
-    /**
-     * @var MockInterface|ScheduleStorage
-     */
-    private $scheduleStorageMock;
+    private ?ScheduleRepository $scheduleRepository;
 
-    /**
-     * @var ScheduleRepository
-     */
-    private $scheduleRepository;
-    
     public function _before()
     {
         $this->scheduleStorageMock = \Mockery::mock(ScheduleStorage::class);
@@ -36,9 +30,13 @@ class ScheduleCest
     }
 
     /**
-     * @dataProvider scheduleProvider
+     * @test
+     * @dataProvider _scheduleProvider
+     * @param Example $example
+     * @param UnitTester $tester
+     * @throws StorageDataMissingException
      */
-    public function testGetByIdSuccess(Example $example, \UnitTester $tester)
+    public function getByIdRepositoryReturnsScheduleEntity(Example $example, UnitTester $tester)
     {
         ['id' => $id, 'start_time' => $startTime, 'end_time' => $endTime, 'name' => $name] = $example;
         $data = ['id' => $id, 'start_time' => $startTime, 'end_time' => $endTime, 'name' => $name];
@@ -55,14 +53,16 @@ class ScheduleCest
     }
 
     /**
-     * @param \UnitTester $tester
+     * @test
+     * @param UnitTester $tester
      */
-    public function testGetByIdFail(\UnitTester $tester)
+    public function getByIdFailsWhenStorageReturnsEmptyPayload(UnitTester $tester)
     {
         $this->scheduleStorageMock
             ->shouldReceive('getById')
             ->with(4)
             ->andReturn([]);
+
         $tester->expectThrowable(StorageDataMissingException::class, function () {
             $this->scheduleRepository->getById(4);
         });
@@ -71,7 +71,7 @@ class ScheduleCest
     /**
      * @return array[]
      */
-    protected function scheduleProvider()
+    protected function _scheduleProvider()
     {
         return [
             ['id' => 1, 'start_time' => 1631232000, 'end_time' => 1631232000 + 86400, 'name' => 'Test'],
