@@ -104,4 +104,30 @@ class ScheduleEntity implements EntityInterface
         $this->endTime = $endTime;
         return $this;
     }
+
+    /**
+     * @return ScheduleItemInterface[]
+     */
+    public function getItems(): array
+    {
+        return $this->items;
+    }
+
+    /**
+     * @param ScheduleItemInterface[] $items
+     */
+    public function setItems(array $items): void
+    {
+        $this->items = $items;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            "id" => $this->getId(),
+            "start_time" => $this->getStartTime(),
+            "end_time" => $this->getEndTime(),
+            "name" => $this->getName()
+        ];
+    }
 }

@@ -2,15 +2,15 @@
 
 namespace Tymeshift\PhpTest\Domains\Schedule;
 
-use Tymeshift\PhpTest\Domains\Schedule\ScheduleStorage;
+use Tymeshift\PhpTest\Exceptions\StorageDataMissingException;
 use Tymeshift\PhpTest\Interfaces\EntityInterface;
 use Tymeshift\PhpTest\Interfaces\FactoryInterface;
 
 class ScheduleRepository
 {
-    private $storage;
+    private ScheduleStorage $storage;
 
-    private $factory;
+    private FactoryInterface $factory;
 
     public function __construct(ScheduleStorage $storage, FactoryInterface $factory)
     {
@@ -18,9 +18,17 @@ class ScheduleRepository
         $this->factory = $factory;
     }
 
-    public function getById(int $id):EntityInterface
+    /**
+     * @param int $id
+     * @return ScheduleEntity|EntityInterface
+     * @throws StorageDataMissingException
+     */
+    public function getById(int $id):EntityInterface|ScheduleEntity
     {
         $data = $this->storage->getById($id);
+        if (!$data) {
+            throw new StorageDataMissingException('Schedule is missing');
+        }
         return $this->factory->createEntity($data);
     }
 }

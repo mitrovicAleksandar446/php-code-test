@@ -16,11 +16,12 @@ use Tymeshift\PhpTest\Interfaces\FactoryInterface;
 abstract class BaseCollection implements IteratorAggregate, Countable, ArrayAccess, JsonSerializable, CollectionInterface
 {
     /** @var EntityInterface[] */
-    protected $items = [];
+    protected array $items = [];
 
     /**
      * BaseCollection constructor.
      * @param array $data
+     * @throws InvalidCollectionDataProvidedException
      */
     public function __construct(array $data = [])
     {
