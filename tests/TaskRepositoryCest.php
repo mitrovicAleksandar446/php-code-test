@@ -17,7 +17,7 @@ use Tymeshift\PhpTest\Exceptions\InvalidCollectionDataProvidedException;
 use Tymeshift\PhpTest\Exceptions\StorageDataMissingException;
 use UnitTester;
 
-class TaskCest
+class TaskRepositoryCest
 {
     /**
      * @var TaskRepository|null

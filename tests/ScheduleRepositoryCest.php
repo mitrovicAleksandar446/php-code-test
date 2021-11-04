@@ -10,7 +10,7 @@ use Tymeshift\PhpTest\Domains\Schedule\ScheduleStorage;
 use Tymeshift\PhpTest\Exceptions\StorageDataMissingException;
 use UnitTester;
 
-class ScheduleCest
+class ScheduleRepositoryCest
 {
     private ?MockInterface $scheduleStorageMock;
 
@@ -39,7 +39,6 @@ class ScheduleCest
     public function getByIdRepositoryReturnsScheduleEntity(Example $example, UnitTester $tester)
     {
         ['id' => $id, 'start_time' => $startTime, 'end_time' => $endTime, 'name' => $name] = $example;
-        $data = ['id' => $id, 'start_time' => $startTime, 'end_time' => $endTime, 'name' => $name];
 
         $this->scheduleStorageMock
             ->shouldReceive('getById')
